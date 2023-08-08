@@ -10,7 +10,7 @@ function Scene:load(scaleF)
     world:addCollisionClass('Player', {ignores = {'Player'}}) --player
 	world:addCollisionClass('PDown', {ignores = {'Player', 'Terrain'}})--checkdown
     world:addCollisionClass('PLeft', {ignores = {'Player', 'Terrain', 'PDown'}})--checkleft
-    world:addCollisionClass('PRight')--checkright
+    world:addCollisionClass('PRight', {ignores = {'Player', 'Terrain', 'PDown', 'PRight'}})--checkright
 
 
 	
@@ -20,6 +20,9 @@ function Scene:load(scaleF)
 	floor1 = world:newRectangleCollider(0, 0, 80, 480)
 	floor1:setCollisionClass('Terrain')
 	floor1:setType('static')
+	floor2 = world:newRectangleCollider(774, 0, 80, 480)
+	floor2:setCollisionClass('Terrain')
+	floor2:setType('static')
 	player:init(80, 80, world, self.scaleF)
 end
 
@@ -36,6 +39,10 @@ end
 
 function Scene:keypressed(key)
 	player:keypressed(key)	
+end
+
+function Scene:keyreleased(key)
+	player:keyreleased(key)
 end
 
 return Scene

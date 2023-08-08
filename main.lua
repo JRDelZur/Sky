@@ -22,6 +22,10 @@ function love.keypressed(key)
 	if Scene.keypressed then Scene:keypressed(key) end
 end 
 
+function love.keyreleased(key)
+	if Scene.keyreleased then Scene:keyreleased(key) end
+end
+
 function manageScene(SelectedScene)
 	Scene = require("scripts/scenes/"..SelectedScene)
 	if Scene.load then Scene:load(scaleF) end
