@@ -94,25 +94,36 @@ function player:keypressed(key)
 	if self.downCheckOnWall == true and key == 'space' then
         self.collider:applyLinearImpulse(0, self.impulseForce * -1)
         print('floor jump')
-    elseif self.leftCheckOnWall == true and self.downCheckOnWall == false and self.rightCheckOnWall == false and key == 'space' and self.rjump >= 0.5 then
+    elseif self.downCheckOnWall == true and key == 'w' then
+        self.collider:applyLinearImpulse(0, self.impulseForce * -1.5)
+        print('Super jump') 
+    elseif self.leftCheckOnWall == true and self.downCheckOnWall == false and self.rightCheckOnWall == false and key == 'space' and self.rjump >= 0.2 then
     	self.rjump = 0
         self.leftCheckOnWall = false
         self.collider:setLinearVelocity(self.px, 0)
-        self.collider:applyLinearImpulse(300, self.impulseForce * -1)
+        self.collider:applyLinearImpulse(150, self.impulseForce * -1)
     	print('sidewall jump')
-    elseif self.leftCheckOnWall == false and self.downCheckOnWall == false and self.rightCheckOnWall == true and key == 'space' and self.rjump >= 0.5 then
+    elseif self.leftCheckOnWall == false and self.downCheckOnWall == false and self.rightCheckOnWall == true and key == 'space' and self.rjump >= 0.2 then
         self.rjump = 0
         self.rightCheckOnWall = false
         self.collider:setLinearVelocity(self.px, 0)
-        self.collider:applyLinearImpulse(-300, self.impulseForce * -1)
+        self.collider:applyLinearImpulse(-150, self.impulseForce * -1)
         print('sidewall jump')
     end
 end
+
 
 function player:keyreleased(key)
     if key == 'a' or key == 'd' then
         self.collider:applyForce(self.px * -1, 0)
         print('friccion')
     end
+
+
+function love.keyreleased(key)
+    if key == "escape" then
+        love.event.quit()
+    end
+end 
 
 end
