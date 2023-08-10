@@ -1,8 +1,8 @@
 function love.conf(t)
     t.window.title = 'Celeste Chafa'
-    t.window.width = 854
-    t.window.height = 480
+    t.window.width = 1280
+    t.window.height = 720
     t.window.resizable = true
-    t.window.minwidth = 854
-    t.window.minheight = 480
+    t.window.minwidth = 1280
+    t.window.minheight = 720
 end

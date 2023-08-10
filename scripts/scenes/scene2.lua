@@ -1,8 +1,11 @@
 Scene = {}
 local wf = require 'libraries/windfield'
-function Scene:load(scaleF)
-	self.scaleF = scaleF
+function Scene:load()
+	sti = require 'libraries/sti'
+	camera = require 'libraries/camera'
+	cam = camera()
 	require 'scripts/sassets/player/player'
+	gameMap = sti('assets/maps/testMap.lua')
 	world = wf.newWorld()
 	world:setGravity(0, 500)
 	--collision classes
@@ -11,30 +14,34 @@ function Scene:load(scaleF)
 	world:addCollisionClass('PDown', {ignores = {'Player', 'Terrain'}})--checkdown
     world:addCollisionClass('PLeft', {ignores = {'Player', 'Terrain', 'PDown'}})--checkleft
     world:addCollisionClass('PRight', {ignores = {'Player', 'Terrain', 'PDown', 'PRight'}})--checkright
-
-
-	
-	floor = world:newRectangleCollider(0, love.graphics.getHeight() - (80 * self.scaleF), 854 * self.scaleF, 80 * self.scaleF)
-	floor:setCollisionClass('Terrain')
-	floor:setType('static')
-	floor1 = world:newRectangleCollider(0, 0, 80 * self.scaleF, love.graphics.getHeight())
-	floor1:setCollisionClass('Terrain')
-	floor1:setType('static')
-	floor2 = world:newRectangleCollider(love.graphics.getWidth() - (80 * self.scaleF), 0, 80 * self.scaleF, love.graphics.getHeight()) 
-	floor2:setCollisionClass('Terrain')
-	floor2:setType('static')
-	player:init(80, 80, world, self.scaleF)
+    --terrains
+    walls = {}
+    if gameMap.layers['walls'] then
+    	for i, obj in pairs(gameMap.layers['walls'].objects) do
+    		local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+    		wall:setType('static')
+    		wall:setCollisionClass('Terrain')
+    		wall:setFixedRotation(true)
+    		table.insert(walls, wall)
+    	end
+    end
+	player:init(80, 80, world)
 end
 
 function Scene:update(dt)
 	world:update(dt)
 	player:update(dt)
-
+	cam:lookAt(player.x, player.y)
 
 end
 
 function Scene:draw()
-	world:draw()
+	cam:attach()
+		gameMap:drawLayer(gameMap.layers['background'])
+		gameMap:drawLayer(gameMap.layers['terrain'])
+		
+		world:draw()
+	cam:detach()
 end
 
 function Scene:keypressed(key)
