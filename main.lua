@@ -3,7 +3,8 @@ wf = require 'libraries/windfield'
 function love.load()
 	scaleFW = lg.getWidth() / 854
 	scaleFH = lg.getHeight() / 480
-	scaleF = (scaleFW + scaleFH) / 2
+	scaleF = math.min(scaleFW, scaleFH)
+
 
 	manageScene("scene2")
 

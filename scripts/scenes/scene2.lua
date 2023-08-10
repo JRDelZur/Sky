@@ -14,13 +14,13 @@ function Scene:load(scaleF)
 
 
 	
-	floor = world:newRectangleCollider(0, 400, 854, 80)
+	floor = world:newRectangleCollider(0, love.graphics.getHeight() - (80 * self.scaleF), 854 * self.scaleF, 80 * self.scaleF)
 	floor:setCollisionClass('Terrain')
 	floor:setType('static')
-	floor1 = world:newRectangleCollider(0, 0, 80, 480)
+	floor1 = world:newRectangleCollider(0, 0, 80 * self.scaleF, love.graphics.getHeight())
 	floor1:setCollisionClass('Terrain')
 	floor1:setType('static')
-	floor2 = world:newRectangleCollider(774, 0, 80, 480)
+	floor2 = world:newRectangleCollider(love.graphics.getWidth() - (80 * self.scaleF), 0, 80 * self.scaleF, love.graphics.getHeight()) 
 	floor2:setCollisionClass('Terrain')
 	floor2:setType('static')
 	player:init(80, 80, world, self.scaleF)
