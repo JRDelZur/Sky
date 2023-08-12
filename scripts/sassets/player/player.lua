@@ -8,14 +8,14 @@ function player:init(x, y, world)
     self.rjump = 0
     self.px = 0
     self.py = 0
-    self.w = 64 
-    self.h = 64 
-    self.impulseForce = 2750 
-    self.speed = 7000 
+    self.w = 32 
+    self.h = 32
+    self.impulseForce = 600 
+    self.speed = 700
     --superjump
     self.sJump = {} --player.superjump
     self.sJump.status = false
-    self.sJump.force = 2750 
+    self.sJump.force = 600 
     --onwall or onfloor
     self.downCheckOnWall = false
     self.leftCheckOnWall = false
@@ -82,23 +82,23 @@ function player:update(dt)
     if love.keyboard.isDown('a') and px > -300 and not love.keyboard.isDown('s')then
     	self.collider:applyForce(self.speed * -1, 0)
         self.sJump.status = false
-        self.sJump.force = 2750
+        self.sJump.force = 600
     elseif love.keyboard.isDown('d') and px < 300 and not love.keyboard.isDown('s') then
     	self.collider:applyForce(self.speed, 0)
         self.sJump.status = false
-        self.sJump.force = 2750
+        self.sJump.force = 600
     elseif not love.keyboard.isDown('a') and not love.keyboard.isDown('d') and self.downCheckOnWall then
         self.collider:setLinearVelocity(0, py)
     end
     --superjump
     if love.keyboard.isDown('s') and love.keyboard.isDown('space') and self.downCheckOnWall == true then
         self.sJump.status = true
-        self.sJump.force = self.sJump.force + (dt * 750)
-        if self.sJump.force >= 4000 then
-            self.sJump.force = 4000
+        self.sJump.force = self.sJump.force + (dt * 100)
+        if self.sJump.force >= 775 then
+            self.sJump.force = 775
         end
     end
-    print(self.sJump.force)
+    print(player.x, player.y)
 end
 
 function player:draw()
@@ -115,7 +115,7 @@ function player:keypressed(key)
             self.leftCheckOnWall = false
         end
         self.collider:setLinearVelocity(self.px, 0)
-        self.collider:applyLinearImpulse(2000 , self.impulseForce * -1)
+        self.collider:applyLinearImpulse(250 , self.impulseForce * -1)
     	print('sidewall jump')
     elseif self.leftCheckOnWall == false and self.downCheckOnWall == false and self.rightCheckOnWall == true and key == 'space' and self.rjump >= 0.2 then
         self.rjump = 0
@@ -123,7 +123,7 @@ function player:keypressed(key)
             self.rightCheckOnWall = false
         end
         self.collider:setLinearVelocity(self.px, 0)
-        self.collider:applyLinearImpulse(2000 * -1, self.impulseForce * -1)
+        self.collider:applyLinearImpulse(250 * -1, self.impulseForce * -1)
         print('sidewall jump')
     end
     print(key)
@@ -139,7 +139,7 @@ function love.keyreleased(key)
     end
     if key == 'space' and self.sJump.status == true then
         self.collider:applyLinearImpulse(0, self.sJump.force * -1)
-        self.sJump.force = 2750
+        self.sJump.force = 600
         self.sJump.status = false
     end
 end 
