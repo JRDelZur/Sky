@@ -4,12 +4,12 @@ function player:init(x, y, world)
     anim8 = require 'libraries/anim8'
 
     --Sprites
-    self.spriteSheet = love.graphics.newImage('assets/Sprites/Heroe_01.png')
-    self.grid = anim8.newGrid( 17, 29, player.spriteSheet:getWidth(),  player.spriteSheet:getHeight() )
+    self.spriteSheet = love.graphics.newImage('assets/Sprites/Heroes_01.png')
+    self.grid = anim8.newGrid( 24, 32, player.spriteSheet:getWidth(),  player.spriteSheet:getHeight() )
 
     self.animations = {}
-    self.animations.left = anim8.newAnimation( player.grid('1-3', 4), 0.2 )
-    self.animations.right = anim8.newAnimation( player.grid('1-3', 2), 0.2 )
+    self.animations.a = anim8.newAnimation( player.grid('10-12', 4), 0.2 )
+    self.animations.d = anim8.newAnimation( player.grid('10-12', 2), 0.2 )
 
     
     --variables basicas player
@@ -90,7 +90,7 @@ function player:update(dt)
         self.rightCheckOnWall = false
     end
     --movimiento
-    if love.keyboard.isDown('left') and px > -300 and not love.keyboard.isDown('s')then
+    if love.keyboard.isDown('a') and px > -300 and not love.keyboard.isDown('s')then
     	self.collider:applyForce(self.speed * -1, 0)
         self.sJump.status = false
         self.sJump.force = 600
@@ -102,8 +102,8 @@ function player:update(dt)
         self.collider:setLinearVelocity(0, py)
 
         --Animacion
-        self.animations.left:update(dt)
-        self.animations.right:update(dt)
+        self.animations.a:update(dt)
+        self.animations.d:update(dt)
 
     end
 
@@ -119,8 +119,8 @@ function player:update(dt)
 end
 
 function player:draw()
-self.animations.left:draw(self.spriteSheet, self.x, self.y, nil, 10)
-self.animations.right:draw(self.spriteSheet, self.x, self.y, nil, 10)
+self.animations.a:draw(self.spriteSheet, self.x, self.y, nil, 2)
+self.animations.d:draw(self.spriteSheet, self.x, self.y, nil, 2)
 end
 
 function player:keypressed(key)
