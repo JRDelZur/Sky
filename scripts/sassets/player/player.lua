@@ -10,7 +10,8 @@ function player:init(x, y, world)
     self.animations = {}
     self.animations.a = anim8.newAnimation( player.grid('10-12', 4), 0.2 )
     self.animations.d = anim8.newAnimation( player.grid('10-12', 2), 0.2 )
-
+    self.animations.stay = anim8.newAnimation( player.grid('11-11', 2), 0.2 )
+    self.animations.actual = self.animations.stay
     
     --variables basicas player
     self.x = x
@@ -19,8 +20,8 @@ function player:init(x, y, world)
     self.rjump = 0
     self.px = 0
     self.py = 0
-    self.w = 32 
-    self.h = 32
+    self.w = 48 
+    self.h = 64
     self.impulseForce = 600 
     self.speed = 700
     --superjump
@@ -55,6 +56,9 @@ end
 function player:update(dt)
 	self.x, self.y = self.collider:getPosition()
 	local px, py = self.collider:getLinearVelocity()
+    self.animations.actual = self.animations.stay
+    
+
     self.px = px
     self.py = py
     self.rjump = self.rjump + dt
@@ -92,18 +96,17 @@ function player:update(dt)
     --movimiento
     if love.keyboard.isDown('a') and px > -300 and not love.keyboard.isDown('s')then
     	self.collider:applyForce(self.speed * -1, 0)
+        self.animations.actual = self.animations.a
         self.sJump.status = false
         self.sJump.force = 600
     elseif love.keyboard.isDown('d') and px < 300 and not love.keyboard.isDown('s') then
     	self.collider:applyForce(self.speed, 0)
+        self.animations.actual = self.animations.d
         self.sJump.status = false
         self.sJump.force = 600
     elseif not love.keyboard.isDown('s') and not love.keyboard.isDown('d') and self.downCheckOnWall then
         self.collider:setLinearVelocity(0, py)
 
-        --Animacion
-        self.animations.a:update(dt)
-        self.animations.d:update(dt)
 
     end
 
@@ -116,11 +119,11 @@ function player:update(dt)
         end
     end
     print(player.x, player.y)
+    self.animations.actual:update(dt)
 end
 
 function player:draw()
-self.animations.a:draw(self.spriteSheet, self.x, self.y, nil, 2)
-self.animations.d:draw(self.spriteSheet, self.x, self.y, nil, 2)
+self.animations.actual:draw(self.spriteSheet, self.x - 24, self.y - 32, nil, 2)
 end
 
 function player:keypressed(key)

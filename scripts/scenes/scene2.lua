@@ -93,7 +93,7 @@ function Scene:draw()
 	gameMap:drawLayer(gameMap.layers['fall'])
 	
 	player:draw()
-		--world:draw()
+	world:draw()
 	cam:detach()
 end
 
