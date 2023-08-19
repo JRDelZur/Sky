@@ -82,6 +82,9 @@ function Scene:update(dt)
 end
 
 function Scene:draw()
+	player:draw()
+	
+
 	cam:attach()
 		gameMap:drawLayer(gameMap.layers['sky'])
 		gameMap:drawLayer(gameMap.layers['dirtfiill'])

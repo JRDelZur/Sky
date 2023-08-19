@@ -1,6 +1,17 @@
 player = {}
 
 function player:init(x, y, world)
+    anim8 = require 'libraries/anim8'
+
+    --Sprites
+    self.spriteSheet = love.graphics.newImage('assets/Sprites/Heroe_01.png')
+    self.grid = anim8.newGrid( 17, 29, player.spriteSheet:getWidth(),  player.spriteSheet:getHeight() )
+
+    self.animations = {}
+    self.animations.left = anim8.newAnimation( player.grid('1-3', 4), 0.2 )
+    self.animations.right = anim8.newAnimation( player.grid('1-3', 2), 0.2 )
+
+    
     --variables basicas player
     self.x = x
     self.y = y
@@ -79,7 +90,7 @@ function player:update(dt)
         self.rightCheckOnWall = false
     end
     --movimiento
-    if love.keyboard.isDown('a') and px > -300 and not love.keyboard.isDown('s')then
+    if love.keyboard.isDown('left') and px > -300 and not love.keyboard.isDown('s')then
     	self.collider:applyForce(self.speed * -1, 0)
         self.sJump.status = false
         self.sJump.force = 600
@@ -87,9 +98,15 @@ function player:update(dt)
     	self.collider:applyForce(self.speed, 0)
         self.sJump.status = false
         self.sJump.force = 600
-    elseif not love.keyboard.isDown('a') and not love.keyboard.isDown('d') and self.downCheckOnWall then
+    elseif not love.keyboard.isDown('s') and not love.keyboard.isDown('d') and self.downCheckOnWall then
         self.collider:setLinearVelocity(0, py)
+
+        --Animacion
+        self.animations.left:update(dt)
+        self.animations.right:update(dt)
+
     end
+
     --superjump
     if love.keyboard.isDown('s') and love.keyboard.isDown('space') and self.downCheckOnWall == true then
         self.sJump.status = true
@@ -102,7 +119,8 @@ function player:update(dt)
 end
 
 function player:draw()
-
+self.animations.left:draw(self.spriteSheet, self.x, self.y, nil, 10)
+self.animations.right:draw(self.spriteSheet, self.x, self.y, nil, 10)
 end
 
 function player:keypressed(key)
