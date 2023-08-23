@@ -85,15 +85,15 @@ function Scene:draw()
 	
 	
 	cam:attach()
-	gameMap:drawLayer(gameMap.layers['sky'])
-	gameMap:drawLayer(gameMap.layers['dirtfiill'])
-	gameMap:drawLayer(gameMap.layers['dirt'])
-	gameMap:drawLayer(gameMap.layers['parkourfill'])
-	gameMap:drawLayer(gameMap.layers['parkour'])
-	gameMap:drawLayer(gameMap.layers['fall'])
-	
-	player:draw()
-	world:draw()
+    	gameMap:drawLayer(gameMap.layers['sky'])
+    	gameMap:drawLayer(gameMap.layers['dirtfiill'])
+    	gameMap:drawLayer(gameMap.layers['dirt'])
+    	gameMap:drawLayer(gameMap.layers['parkourfill'])
+    	gameMap:drawLayer(gameMap.layers['parkour'])
+    	gameMap:drawLayer(gameMap.layers['fall'])
+    	
+    	player:draw()
+        --world:draw()
 	cam:detach()
 end
 
