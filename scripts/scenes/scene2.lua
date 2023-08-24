@@ -67,12 +67,14 @@ function Scene:load()
 
 
 
-	player:init(2010, 1519, world)
+	player:init(2010, 1519, world, cam)
 end
 
 function Scene:update(dt)
 	world:update(dt)
+    player.cam = cam
 	player:update(dt)
+
 	if player.collider:enter('CheckEvent') then
 		player.collider:setCollisionClass('Ghost')
 		falled = true
