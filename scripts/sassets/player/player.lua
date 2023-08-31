@@ -3,7 +3,7 @@ local anim8 = require 'libraries/anim8'
 local lg = love.graphics
 function player:init(x, y, world, cam)
     
-
+    require 'scripts/sassets/guns/gun'
     --Sprites
     self.spriteSheet = love.graphics.newImage('assets/Sprites/Player/playerSS.png')
     self.arm = {}
@@ -33,6 +33,7 @@ function player:init(x, y, world, cam)
     --variables basicas player
     self.x = x
     self.y = y
+    self.gun = gun:new()
     self.world = world
     self.cam = cam
     self.rjump = 0
@@ -43,10 +44,8 @@ function player:init(x, y, world, cam)
     self.h = 60
     self.impulseForce = 600 
     self.speed = 500
-    --superjump
-    self.sJump = {} --player.superjump
-    self.sJump.status = false
-    self.sJump.force = 600 
+    --pistola arma
+    self.gun = gun:new(self.arm.x, self.arm.y, self.arm.angle, self.view, 5, '3', self.world)
     --onwall or onfloor
     self.downCheckOnWall = false
     --collider
@@ -94,7 +93,7 @@ function player:update(dt)
     --ajuste de mira depende el brazo
     if gangle >= 90 and gangle <= 180 then--si el brazo voltea a la izquierda self.view es left
         self.view = 'left'
-    elseif gangle >= 0 and gangle <= 90 then--si el brazo voltea a la derecha self.view es right
+    elseif gangle >= 0 and gangle <= 89 then--si el brazo voltea a la derecha self.view es right
         self.view = 'right'
     end
     self.px = px
@@ -132,26 +131,30 @@ function player:update(dt)
         elseif self.downCheckOnWall == true and self.view == 'left' then 
             self.animations.actual = self.animations.aR
         end
-    elseif not love.keyboard.isDown('s') and not love.keyboard.isDown('d') and self.downCheckOnWall then
+    elseif not love.keyboard.isDown('d') and not love.keyboard.isDown('a') and self.downCheckOnWall then
         self.collider:setLinearVelocity(0, py)
     end
 
-    print(player.x, player.y)
+    --PISTOLA
+    self.gun:update(dt)
+    self.gun.x = self.arm.x
+    self.gun.y = self.arm.y
+    self.gun.angle = self.arm.angle
+    self.gun.view = self.view
     self.animations.actual:update(dt)
 end
 
 function player:draw()
     lg.draw(self.arm.sprite, self.arm.x, self.arm.y, self.arm.angle, 1, 1, 0, 4)
-    self.animations.actual:draw(self.spriteSheet, self.x - 15, self.y - 35, nil, 1)
+    self.gun:draw()
+    self.animations.actual:draw(self.spriteSheet, self.x - 15, self.y - 35, nil, 1, 1)
     
 end
 
 function player:keypressed(key)
 	if self.downCheckOnWall == true and key == 'space' and not love.keyboard.isDown('s') then
         self.collider:applyLinearImpulse(0, self.impulseForce * -1)
-        print('floor jump')
     end
-    print(key)
 end
 
 
