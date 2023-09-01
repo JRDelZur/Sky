@@ -141,10 +141,17 @@ function player:update(dt)
     self.gun.y = self.arm.y
     self.gun.angle = self.arm.angle
     self.gun.view = self.view
+    self.gun.mx = fmx
+    self.gun.my = fmy
     self.animations.actual:update(dt)
+    print(self.arm.angle)
 end
 
 function player:draw()
+    for i,bullet in ipairs(self.gun.bullets) do
+        bullet:draw()
+
+    end
     lg.draw(self.arm.sprite, self.arm.x, self.arm.y, self.arm.angle, 1, 1, 0, 4)
     self.gun:draw()
     self.animations.actual:draw(self.spriteSheet, self.x - 15, self.y - 35, nil, 1, 1)

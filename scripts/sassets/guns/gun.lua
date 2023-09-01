@@ -19,6 +19,9 @@ function gun:new(x, y, angle, view, damage, skin, world)
 	self.quadL = nil
 	self.oY = 4
 	self.oX = 0
+	self.mx = 0
+	self.my = 0
+	self.btime = 0
 	self.bullets = {}
 	if skin == '1' then--pistola
 		self.quadR = love.graphics.newQuad( 0, 0, 29, 11, self.atlas)
@@ -44,6 +47,7 @@ function gun:new(x, y, angle, view, damage, skin, world)
 end
 
 function gun:update(dt)
+	self.btime = self.btime + dt
 	if self.view == 'right' then
 		self.quad = self.quadR
 		self.oY = 8
@@ -66,8 +70,13 @@ function gun:update(dt)
 		self.oX = -9
 
 	end
-	if love.mouse.isDown('1') then
-		table.insert(self.bullets, bullet:new(self.x, self.y, self.angle, self.world))
+	if love.mouse.isDown('1') and self.btime >= 0.2 then
+        local bangle = math.atan2((self.my - self.y), (self.mx - self.x))  
+        local dirY = math.sin(bangle) * (600)
+        local dirX = math.cos(bangle) * (600)
+
+		table.insert(self.bullets, bullet:new(self.x, self.y, bangle, self.world, dirX, dirY))
+		self.btime = 0
 	end
 	for i,bullet in ipairs(self.bullets) do
 		bullet:update(dt)
@@ -75,17 +84,16 @@ function gun:update(dt)
 			bullet.collider:destroy()
 			table.remove(self.bullets, i)
 		end
-
+		if bullet.angle == self.angle then
+			print('DEBUG')
+		end
 	end
 end
 
 function gun:draw()
 	print(self.oX)
 	lg.draw(self.atlas, self.quad, self.x, self.y, self.angle, 1, 1, self.oX, self.oY)
-	for i,bullet in ipairs(self.bullets) do
-		bullet:draw()
 
-	end
 	--lg.rectangle('line', self.x, self.y -2, 5, 5)
 	--print(self.oX)
 end

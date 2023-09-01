@@ -30,7 +30,7 @@ function Scene:load()
 
 
 
-	player:init(2010, 1519, world, cam)
+	player:init(752, 1648, world, cam)
 end
 
 function Scene:update(dt)
@@ -45,15 +45,11 @@ function Scene:draw()
 	
 	
 	cam:attach()
-    	gameMap:drawLayer(gameMap.layers['sky'])
-    	gameMap:drawLayer(gameMap.layers['dirtfiill'])
-    	gameMap:drawLayer(gameMap.layers['dirt'])
-    	gameMap:drawLayer(gameMap.layers['parkourfill'])
-    	gameMap:drawLayer(gameMap.layers['parkour'])
-    	gameMap:drawLayer(gameMap.layers['fall'])
-    	
+    	gameMap:drawLayer(gameMap.layers['background'])
+        gameMap:drawLayer(gameMap.layers['terrain'])
+
     	player:draw()
-        world:draw()
+        --world:draw()
 	cam:detach()
 end
 
