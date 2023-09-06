@@ -22,6 +22,8 @@ function gun:new(x, y, angle, view, damage, skin, world)
 	self.mx = 0
 	self.my = 0
 	self.btime = 0
+	self.generatorX = 0
+	self.generatorY = 0
 	self.bullets = {}
 	if skin == '1' then--pistola
 		self.quadR = love.graphics.newQuad( 0, 0, 29, 11, self.atlas)
@@ -71,11 +73,11 @@ function gun:update(dt)
 
 	end
 	if love.mouse.isDown('1') and self.btime >= 0.2 then
-        local bangle = math.atan2((self.my - self.y), (self.mx - self.x))  
+        local bangle = math.atan2((self.my - self.generatorY), (self.mx - self.generatorX))  
         local dirY = math.sin(bangle) * (600)
         local dirX = math.cos(bangle) * (600)
 
-		table.insert(self.bullets, bullet:new(self.x, self.y, bangle, self.world, dirX, dirY))
+		table.insert(self.bullets, bullet:new(self.generatorX, self.generatorY, bangle, self.world, dirX, dirY))
 		self.btime = 0
 	end
 	for i,bullet in ipairs(self.bullets) do
@@ -84,14 +86,11 @@ function gun:update(dt)
 			bullet.collider:destroy()
 			table.remove(self.bullets, i)
 		end
-		if bullet.angle == self.angle then
-			print('DEBUG')
-		end
 	end
 end
 
 function gun:draw()
-	print(self.oX)
+
 	lg.draw(self.atlas, self.quad, self.x, self.y, self.angle, 1, 1, self.oX, self.oY)
 
 	--lg.rectangle('line', self.x, self.y -2, 5, 5)

@@ -29,7 +29,7 @@ function player:init(x, y, world, cam)
     self.animations.fallL = anim8.newAnimation( player.grid('6-6', 1), 0.1)
     self.animations.stay = self.animations.stayR
     self.animations.actual = self.animations.stay
-    
+
     --variables basicas player
     self.x = x
     self.y = y
@@ -44,6 +44,11 @@ function player:init(x, y, world, cam)
     self.h = 60
     self.impulseForce = 600 
     self.speed = 500
+        --
+    self.generator = {}
+    self.generator.view = self.view
+    self.generator.x = 0
+    self.generator.y = 0
     --pistola arma
     self.gun = gun:new(self.arm.x, self.arm.y, self.arm.angle, self.view, 5, '3', self.world)
     --onwall or onfloor
@@ -69,16 +74,17 @@ function player:update(dt)
     local fmx, fmy = cam:worldCoords(mx, my)
 	local px, py = self.collider:getLinearVelocity()
     --ajustes segun donde voltea
-    if self.view == 'left' then
 
-        self.arm.x = self.x
+    if self.view == 'left' then
+        self.generator.view = 'left'
+        self.arm.x = self.x 
         self.arm.y = self.y - 15
         self.animations.stay = self.animations.stayL
         if self.downCheckOnWall == false and py > 0 then
             self.animations.stay = self.animations.fallL
         end
     elseif self.view == 'right' then
-
+        self.generator.view = 'right'
         self.arm.x = self.x + 2
         self.arm.y = self.y - 15
         self.animations.stay = self.animations.stayR
@@ -86,9 +92,56 @@ function player:update(dt)
             self.animations.stay = self.animations.fallR
         end
     end
+    local sangle = self.arm.angle * (180 / math.pi)
+    local gangle = math.abs(self.arm.angle * (180 / math.pi))
+    --generadorvoltea
+    if self.generator.view == 'left' then
+        if sangle < -90 and sangle > -180 then
+            self.generator.x = self.x - 5
+            self.generator.y = self.y - 20
+        elseif sangle < 180 and sangle > 156.98163914709 then
+            self.generator.x = self.x - 4
+            self.generator.y = self.y - 22
+        elseif sangle < 156.98163914709 and sangle > 139.34745690756 then
+            self.generator.x = self.x - 5
+            self.generator.y = self.y - 24
+        elseif sangle < 139.34745690756 and sangle > 90 then
+            self.generator.x = self.x - 7
+            self.generator.y = self.y - 26
+        end
+    elseif self.generator.view == 'right' then
+        if sangle > -90 and sangle < -25.758121721976 then
+            self.generator.x = self.x - 3
+            self.generator.y = self.y - 27
+        elseif sangle > -25.758121721976 and sangle < -29.647769899234 then
+            self.generator.x = self.x - 2
+            self.generator.y = self.y - 24
+        elseif sangle > -29.647769899234 and sangle < 5.9132140118629 then
+            self.generator.x = self.x - 2
+            self.generator.y = self.y - 20
+        elseif sangle > 5.9132140118629 and sangle < 18.434948822922 then
+            self.generator.x = self.x - 2
+            self.generator.y = self.y - 18
+        elseif sangle > 18.434948822922 and sangle < 40.368257078255 then
+            self.generator.x = self.x - 2
+            self.generator.y = self.y - 16
+        elseif sangle > 40.368257078255 and sangle < 54.261676329554 then
+            self.generator.x = self.x - 2
+            self.generator.y = self.y - 14
+        elseif sangle > 54.261676329554 and sangle < 65.628900849089 then
+            self.generator.x = self.x - 2
+            self.generator.y = self.y - 12
+        elseif sangle > 65.628900849089 and sangle < 90 then
+            self.generator.x = self.x - 2
+            self.generator.y = self.y - 8
+        end
+    end
+    
+
+
     self.animations.actual = self.animations.stay
     self.arm.angle = math.atan2((fmy - self.arm.y), (fmx - self.arm.x))--angulo relacion mouse y el brazo
-    local gangle = math.abs(self.arm.angle * (180 / math.pi))
+ 
 
     --ajuste de mira depende el brazo
     if gangle >= 90 and gangle <= 180 then--si el brazo voltea a la izquierda self.view es left
@@ -143,8 +196,12 @@ function player:update(dt)
     self.gun.view = self.view
     self.gun.mx = fmx
     self.gun.my = fmy
+    self.gun.generatorX = self.generator.x
+    self.gun.generatorY = self.generator.y
     self.animations.actual:update(dt)
-    print(self.arm.angle)
+    ---180
+    --print('x', fmx - self.x, 'y', fmy - self.y)
+    print(sangle)
 end
 
 function player:draw()
@@ -155,7 +212,7 @@ function player:draw()
     lg.draw(self.arm.sprite, self.arm.x, self.arm.y, self.arm.angle, 1, 1, 0, 4)
     self.gun:draw()
     self.animations.actual:draw(self.spriteSheet, self.x - 15, self.y - 35, nil, 1, 1)
-    
+    --lg.rectangle('fill', self.generator.x, self.generator.y , 5, 5)
 end
 
 function player:keypressed(key)
