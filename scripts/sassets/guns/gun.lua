@@ -81,11 +81,27 @@ function gun:update(dt)
 		self.btime = 0
 	end
 	for i,bullet in ipairs(self.bullets) do
-		bullet:update(dt)
-		if bullet.collider:enter('Terrain') or bullet.lifetime >= 1 then
+
+
+		if bullet.collider:enter('Terrain') then
 			bullet.collider:destroy()
 			table.remove(self.bullets, i)
+			break
+		elseif bullet.lifetime >= 1 then
+			bullet.collider:destroy()
+			table.remove(self.bullets, i)
+			break
+		elseif bullet.collider:enter('Object') then
+			bullet.collider:destroy()
+			table.remove(self.bullets, i)
+			break			
+		elseif bullet.collider:isDestroyed() then
+			table.remove(self.bullets, i)
+			break
 		end
+
+
+		bullet:update(dt)
 	end
 end
 

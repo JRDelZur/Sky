@@ -42,7 +42,7 @@ function player:init(x, y, world, cam)
     self.py = 0
     self.w = 15 
     self.h = 60
-    self.impulseForce = 600 
+    self.impulseForce = 450 
     self.speed = 500
         --
     self.generator = {}
@@ -156,12 +156,18 @@ function player:update(dt)
 	self.downCheck:setX(self.x)
 	self.downCheck:setY(self.y + ((self.h / 2) + ((self.h / 5) / 2)))
 	--onfloor
-	if self.downCheck:enter('Terrain') then --toca el piso
-		self.downCheckOnWall = true
+	if self.downCheck:enter('Terrain') or self.downCheck:enter('Object') then --toca el piso
+	
     end
-    if self.downCheck:exit('Terrain') then --deja de tocar el piso
+    if self.downCheck:stay('Terrain') or self.downCheck:stay('Object') then
+        self.downCheckOnWall = true
+    else
         self.downCheckOnWall = false
     end
+    if self.downCheck:exit('Terrain') or self.downCheck:exit('Object') then --deja de tocar el piso
+        
+    end
+    print(self.downCheckOnWall)
     --movimiento
     if love.keyboard.isDown('a') then
         if px > -200 then

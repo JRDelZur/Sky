@@ -25,7 +25,7 @@ function bullet:new(x, y, angle, world, dirX, dirY)
     self.collider = world:newRectangleCollider(self.x, self.y , self.h, self.w)
     self.collider:setFixedRotation(true)
     self.collider:setCollisionClass('Bullet')
-    self.collider:setObject(self)
+    self.collider:setObject(bullet)
     self.sprite = lg.newImage('assets/Sprites/Gun/bullet/bullet.png')
    	self.sprite:setFilter('nearest')
     return self

@@ -5,6 +5,9 @@ function Scene:load()
 	camera = require 'libraries/camera'
 	cam = camera()
 	require 'scripts/sassets/player/player'
+	require 'scripts/sassets/objects/bhoox/bhoox'
+	hooks = {}
+
 	gameMap = sti('assets/maps/tutorialMap.lua')
 	world = wf.newWorld()
 	world:setGravity(0, 500)
@@ -14,8 +17,9 @@ function Scene:load()
     world:addCollisionClass('Player', {ignores = {'Player'}}) --player
 	world:addCollisionClass('PDown', {ignores = {'Player', 'Terrain'}})--checkdown
     world:addCollisionClass('Bullet', {ignores = {'Player', 'Terrain', 'PDown', 'Bullet'}})
+    world:addCollisionClass('Object', {ignores = {'PDown'}})
     --terrains
-
+    hooks[1] = bhoox:new(928, 1472, world)
     walls = {}
     if gameMap.layers['walls'] then
     	for i, obj in pairs(gameMap.layers['walls'].objects) do
@@ -37,6 +41,9 @@ function Scene:update(dt)
 	world:update(dt)
     player.cam = cam
 	player:update(dt)
+	for i,v in ipairs(hooks) do
+		v:update(dt)
+	end
 	cam:lookAt(player.x + lg.getWidth() / 7, player.y - lg.getHeight() / 3.5)
 	--print(falled)
 end
@@ -47,7 +54,7 @@ function Scene:draw()
 	cam:attach()
     	gameMap:drawLayer(gameMap.layers['background'])
         gameMap:drawLayer(gameMap.layers['terrain'])
-
+        hooks[1]:draw()
     	player:draw()
         --world:draw()
 	cam:detach()
