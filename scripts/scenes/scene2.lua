@@ -4,20 +4,22 @@ function Scene:load()
 	sti = require 'libraries/sti'
 	camera = require 'libraries/camera'
 	cam = camera()
+	require 'scripts/collClasses'
 	require 'scripts/sassets/player/player'
 	require 'scripts/sassets/objects/bhoox/bhoox'
-	hooks = {}
-
-	gameMap = sti('assets/maps/tutorialMap.lua')
+	require 'scripts/sassets/zombie/zombie'
 	world = wf.newWorld()
 	world:setGravity(0, 500)
 	falled = false
-	--collision classes
-	world:addCollisionClass('Terrain')--terreno
-    world:addCollisionClass('Player', {ignores = {'Player'}}) --player
-	world:addCollisionClass('PDown', {ignores = {'Player', 'Terrain'}})--checkdown
-    world:addCollisionClass('Bullet', {ignores = {'Player', 'Terrain', 'PDown', 'Bullet'}})
-    world:addCollisionClass('Object', {ignores = {'PDown'}})
+	chargeClasses()--cargamos clases
+
+
+	hooks = {}
+	zombies = {}
+	zombies[1] = zombie:new(982, 1472, world)
+
+	gameMap = sti('assets/maps/tutorialMap.lua')
+
     --terrains
     hooks[1] = bhoox:new(928, 1472, world)
     walls = {}
@@ -44,6 +46,7 @@ function Scene:update(dt)
 	for i,v in ipairs(hooks) do
 		v:update(dt)
 	end
+	zombies[1]:update(dt)
 	cam:lookAt(player.x + lg.getWidth() / 7, player.y - lg.getHeight() / 3.5)
 	--print(falled)
 end
@@ -56,7 +59,8 @@ function Scene:draw()
         gameMap:drawLayer(gameMap.layers['terrain'])
         hooks[1]:draw()
     	player:draw()
-        --world:draw()
+    	zombies[1]:draw()
+        world:draw(0.07)
 	cam:detach()
 end
 

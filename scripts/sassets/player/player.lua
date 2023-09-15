@@ -167,7 +167,7 @@ function player:update(dt)
     if self.downCheck:exit('Terrain') or self.downCheck:exit('Object') then --deja de tocar el piso
         
     end
-    print(self.downCheckOnWall)
+
     --movimiento
     if love.keyboard.isDown('a') then
         if px > -200 then

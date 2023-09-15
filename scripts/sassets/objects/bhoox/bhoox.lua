@@ -20,6 +20,7 @@ function bhoox:new(x, y, world)
     self.boxCollider:setType('static')
     self.checkCollider = world:newRectangleCollider(self.x + 28, self.y + 25, 6, 44)
     self.checkCollider:setType('static')
+    self.boxCollider:setFixedRotation(true)
     self.checkCollider:setCollisionClass('Object')
     self.boxCollider:setCollisionClass('Object')
     self.world = world
