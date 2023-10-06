@@ -1,7 +1,7 @@
 bullet = {}
 bullet.__index = bullet
 local lg = love.graphics
-function bullet:new(x, y, angle, world, dirX, dirY)
+function bullet:new(x, y, angle, world, dirX, dirY, damage)
     self = setmetatable({}, bullet)
     --variables basicas de las balas
     self.x = x 
@@ -10,7 +10,10 @@ function bullet:new(x, y, angle, world, dirX, dirY)
     self.yy = y
     self.w = 8
     self.h = 16
+    self.damage = damage
+    self.class = nil
     self.speed = 450
+
     self.dirX = dirX
     self.dirY = dirY
     self.angle = angle
@@ -24,7 +27,10 @@ function bullet:new(x, y, angle, world, dirX, dirY)
     --collider
     self.collider = world:newRectangleCollider(self.x, self.y , self.h, self.w)
     self.collider:setFixedRotation(true)
-    self.collider:setCollisionClass('Bullet')
+    if self.damage == 1 then
+        self.class = 'Bullet1'
+    end
+    self.collider:setCollisionClass(self.class)
     self.collider:setObject(bullet)
     self.sprite = lg.newImage('assets/Sprites/Gun/bullet/bullet.png')
    	self.sprite:setFilter('nearest')

@@ -6,6 +6,8 @@ function bhoox:new(x, y, world)
     self = setmetatable({}, bhoox)
     self.x = x
     self.y = y
+    self.h = 46
+    self.w = 50
     self.bx = self.x
     self.by = self.y + 44
     self.texture = lg.newImage('assets/Sprites/Objects/bhoox/bhooxAtlas.png')
@@ -16,19 +18,21 @@ function bhoox:new(x, y, world)
     self.qDownBrok = love.graphics.newQuad( 50, 0, 29, 48, self.texture)
     self.qDown = self.qDownFix
     self.down = false
-    self.boxCollider = world:newRectangleCollider(self.bx, self.by + 51, 50, 46)
+    self.boxCollider = world:newRectangleCollider(self.bx, self.by + 51, self.w, self.h)
     self.boxCollider:setType('static')
     self.checkCollider = world:newRectangleCollider(self.x + 28, self.y + 25, 6, 44)
     self.checkCollider:setType('static')
     self.boxCollider:setFixedRotation(true)
     self.checkCollider:setCollisionClass('Object')
     self.boxCollider:setCollisionClass('Object')
+    self.boxCollider:setObject(bhoox)
+
     self.world = world
     return self
 end
 
 function bhoox:update(dt)
-    if self.checkCollider:enter('Bullet') then
+    if self.checkCollider:enter('Bullet1') then
         self.down = true
         self.checkCollider:destroy()
     end

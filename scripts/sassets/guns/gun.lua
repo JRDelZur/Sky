@@ -21,6 +21,7 @@ function gun:new(x, y, angle, view, damage, skin, world)
 	self.oX = 0
 	self.mx = 0
 	self.my = 0
+	self.isFiring = false
 	self.btime = 0
 	self.generatorX = 0
 	self.generatorY = 0
@@ -72,12 +73,12 @@ function gun:update(dt)
 		self.oX = -9
 
 	end
-	if love.mouse.isDown('1') and self.btime >= 0.2 then
-        local bangle = math.atan2((self.my - self.generatorY), (self.mx - self.generatorX))  
-        local dirY = math.sin(bangle) * (600)
-        local dirX = math.cos(bangle) * (600)
+	if self.isFiring == true and self.btime >= 0.2 then
 
-		table.insert(self.bullets, bullet:new(self.generatorX, self.generatorY, bangle, self.world, dirX, dirY))
+        local dirY = math.sin(self.angle) * (600)
+        local dirX = math.cos(self.angle) * (600)
+
+		table.insert(self.bullets, bullet:new(self.generatorX, self.generatorY, self.angle, self.world, dirX, dirY, self.damage))
 		self.btime = 0
 	end
 	for i,bullet in ipairs(self.bullets) do
@@ -94,7 +95,11 @@ function gun:update(dt)
 		elseif bullet.collider:enter('Object') then
 			bullet.collider:destroy()
 			table.remove(self.bullets, i)
-			break			
+			break		
+		elseif bullet.collider:enter('Zombie') then	
+			bullet.collider:destroy()
+			table.remove(self.bullets, i)
+			break		
 		elseif bullet.collider:isDestroyed() then
 			table.remove(self.bullets, i)
 			break
